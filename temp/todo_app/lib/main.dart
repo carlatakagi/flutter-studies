@@ -23,8 +23,15 @@ class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        appBar: AppBar(
+          leading: Text('oi'),
+          title: Text('Todo List'),
+          actions: <Widget>[
+            Icon(Icons.plus_one),
+          ],
+        ),
         body: Container(
-      child: Text('hello world'),
-    ));
+          child: const Center(child: Text('Hello, World!')),
+        ));
   }
 }
