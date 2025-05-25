@@ -36,6 +36,20 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   var _newTaskController = TextEditingController();
 
+  void _addNewTask() {
+    if (_newTaskController.text.isEmpty) return;
+    setState(() {
+      widget.items.add(Item(title: _newTaskController.text, done: false));
+      _newTaskController.clear();
+    });
+  }
+
+  void _removeTask(int index) {
+    setState(() {
+      widget.items.removeAt(index);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,34 +68,45 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ),
         backgroundColor: const Color.fromARGB(255, 112, 89, 241),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.add),
-            onPressed: () {
-              setState(() {
-                widget.items
-                    .add(Item(title: _newTaskController.text, done: false));
-              });
-            },
-          ),
-        ],
       ),
       body: ListView.builder(
         itemCount: widget.items.length,
         itemBuilder: (context, index) {
           final item = widget.items[index];
-          return ListTile(
-            title: Text(item.title),
-            trailing: Checkbox(
-              value: item.done,
-              onChanged: (bool? value) {
-                setState(() {
-                  item.done = value ?? false;
-                });
+          return Dismissible(
+              key: Key(item.title),
+              background: Container(
+                color: Colors.red.withOpacity(0.5),
+                alignment: Alignment.centerRight,
+                padding: const EdgeInsets.only(right: 20),
+                child: const Icon(Icons.delete, color: Colors.white),
+              ),
+              onDismissed: (direction) {
+                _removeTask(index);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('${item.title} removed'),
+                  ),
+                );
               },
-            ),
-          );
+              child: ListTile(
+                title: Text(item.title),
+                trailing: Checkbox(
+                  value: item.done,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      item.done = value ?? false;
+                    });
+                  },
+                ),
+              ));
         },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _addNewTask,
+        backgroundColor: const Color.fromARGB(255, 112, 89, 241),
+        foregroundColor: Colors.white,
+        child: const Icon(Icons.add),
       ),
     );
   }
