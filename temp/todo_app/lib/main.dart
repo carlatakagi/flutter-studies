@@ -34,18 +34,33 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  var _newTaskController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Todo List'),
+        title: TextFormField(
+          controller: _newTaskController,
+          keyboardType: TextInputType.text,
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 12,
+          ),
+          decoration: const InputDecoration(
+            labelText: 'New task',
+            labelStyle: TextStyle(color: Colors.white),
+            border: InputBorder.none,
+          ),
+        ),
         backgroundColor: const Color.fromARGB(255, 112, 89, 241),
         actions: [
           IconButton(
-            icon: Icon(Icons.add),
+            icon: const Icon(Icons.add),
             onPressed: () {
               setState(() {
-                widget.items.add(Item(title: 'New Item', done: false));
+                widget.items
+                    .add(Item(title: _newTaskController.text, done: false));
               });
             },
           ),
