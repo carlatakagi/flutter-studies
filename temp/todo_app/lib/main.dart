@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-// import 'package:flutter/cupertino.dart'; ios
+import 'models/item.dart';
 
 void main() => runApp(MyApp());
 
@@ -19,19 +19,55 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class MyHomePage extends StatelessWidget {
+class MyHomePage extends StatefulWidget {
+  var items = List.empty().cast<Item>();
+
+  MyHomePage() {
+    items = [];
+    items.add(Item(title: 'item 1', done: false));
+    items.add(Item(title: 'item 2', done: true));
+    items.add(Item(title: 'item 3', done: false));
+  }
+
+  @override
+  _MyHomePageState createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          //leading: Text('oi'),
-          title: Text('Todo List'),
-          actions: <Widget>[
-            Icon(Icons.plus_one),
-          ],
-        ),
-        body: Container(
-          child: const Center(child: Text('Hello, World!')),
-        ));
+      appBar: AppBar(
+        title: Text('Todo List'),
+        backgroundColor: const Color.fromARGB(255, 112, 89, 241),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.add),
+            onPressed: () {
+              setState(() {
+                widget.items.add(Item(title: 'New Item', done: false));
+              });
+            },
+          ),
+        ],
+      ),
+      body: ListView.builder(
+        itemCount: widget.items.length,
+        itemBuilder: (context, index) {
+          final item = widget.items[index];
+          return ListTile(
+            title: Text(item.title),
+            trailing: Checkbox(
+              value: item.done,
+              onChanged: (bool? value) {
+                setState(() {
+                  item.done = value ?? false;
+                });
+              },
+            ),
+          );
+        },
+      ),
+    );
   }
 }
