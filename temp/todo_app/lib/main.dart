@@ -1,4 +1,9 @@
+// ignore_for_file: unused_local_variable
+
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'models/item.dart';
 
 void main() => runApp(MyApp());
@@ -24,9 +29,9 @@ class MyHomePage extends StatefulWidget {
 
   MyHomePage() {
     items = [];
-    items.add(Item(title: 'item 1', done: false));
-    items.add(Item(title: 'item 2', done: true));
-    items.add(Item(title: 'item 3', done: false));
+    //items.add(Item(title: 'item 1', done: false));
+    //items.add(Item(title: 'item 2', done: true));
+    //items.add(Item(title: 'item 3', done: false));
   }
 
   @override
@@ -48,6 +53,23 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       widget.items.removeAt(index);
     });
+  }
+
+  Future load() async {
+    var prefs = await SharedPreferences.getInstance();
+    var data = prefs.getStringList('data');
+
+    if (data != null) {
+      List<Item> result =
+          data.map((item) => Item.fromJson(jsonDecode(item))).toList();
+      setState(() {
+        widget.items = result;
+      });
+    }
+  }
+
+  _MyHomePageState() {
+    load();
   }
 
   @override
@@ -85,7 +107,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 _removeTask(index);
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
-                    content: Text('${item.title} removed'),
+                    content: Text('${item.title} was removed'),
                   ),
                 );
               },
