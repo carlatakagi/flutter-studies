@@ -46,6 +46,7 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       widget.items.add(Item(title: _newTaskController.text, done: false));
       _newTaskController.clear();
+      save();
     });
   }
 
@@ -53,6 +54,7 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       widget.items.removeAt(index);
     });
+    save();
   }
 
   Future load() async {
@@ -66,6 +68,13 @@ class _MyHomePageState extends State<MyHomePage> {
         widget.items = result;
       });
     }
+  }
+
+  save() async {
+    var prefs = await SharedPreferences.getInstance();
+    List<String> data =
+        widget.items.map((item) => jsonEncode(item.toJson())).toList();
+    prefs.setStringList('data', data);
   }
 
   _MyHomePageState() {
@@ -119,6 +128,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     setState(() {
                       item.done = value ?? false;
                     });
+                    save();
                   },
                 ),
               ));
