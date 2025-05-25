@@ -24,7 +24,7 @@ class MyHomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          leading: Text('oi'),
+          //leading: Text('oi'),
           title: Text('Todo List'),
           actions: <Widget>[
             Icon(Icons.plus_one),
